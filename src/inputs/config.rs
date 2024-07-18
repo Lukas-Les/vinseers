@@ -1,13 +1,14 @@
 const DEFAULT_MAX_RESULTS: i32 = -1;
 const DEFAULT_RE_PATTERN: &str = "(?i)\\b[A-HJ-NPR-Z0-9]{17}\\b";
 
+
 #[derive(Debug)]
 pub struct Config {
-    target_file_path: Option<String>,
-    target_dir: Option<String>,
-    output_file: Option<String>,
-    max_results: i32,
-    re_pattern: String,
+    pub target_file_path: Option<String>,
+    pub target_dir: Option<String>,
+    pub output_file: Option<String>,
+    pub max_results: i32,
+    pub re_pattern: String,
 }
 
 impl Config {
