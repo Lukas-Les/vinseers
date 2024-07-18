@@ -1,6 +1,5 @@
 use crate::inputs::config::Config;
 
-
 pub fn parse_args(args: Vec<String>) -> Result<Config, String> {
     let mut target_file_path: Option<String> = None;
     let mut target_dir: Option<String> = None;
@@ -10,23 +9,37 @@ pub fn parse_args(args: Vec<String>) -> Result<Config, String> {
 
     let mut i = 1;
     while i < args.len() - 1 {
-        let v = Some(&args[i+1]).cloned();
-        match args[i].as_str() {
+        let flag = args[i].as_str();
+        if !flag.starts_with("-") {
+            i += 1;
+            continue;
+        }
+        let v = Some(args[i+1].clone());
+        match flag {
             "-f" | "--file" => { target_file_path = v },
             "-d" | "--dir" => { target_dir = v },
             "-o" | "--output" => { output_file = v},
-            "-m" | "--max" => { max_results = Some(v.unwrap().parse::<u32>().unwrap()) },
+            "-m" | "--max" => { max_results = Some(v.unwrap().parse::<u32>().map_err(|e| e.to_string())?) },
             "-r" | "--re" => { re_pattern = v },
             _ => {
-                panic!("unknown flag: {}", args[i])
+                return Err(format!("unknown flag: {}", args[i]));
             }
         }
-        i += 1;
-    }
-    Config::new(target_file_path, target_dir, output_file, max_results, re_pattern)
+        i += 2;
     }
 
-    #[cfg(test)]
+    if target_file_path.is_some() && target_dir.is_some() {
+        return Err("Provide only target file or directory, not both!".to_string());
+    }
+
+    if target_file_path.is_none() && target_dir.is_none() {
+        return Err("Provide target file or directory!".to_string());
+    }
+
+    Config::new(target_file_path, target_dir, output_file, max_results, re_pattern)
+}
+
+#[cfg(test)]
 mod tests {
     use super::*;
     use crate::inputs::config::{Config};
@@ -116,9 +129,13 @@ mod tests {
     fn test_parse_args_unknown_flag() {
         let args = vec![
             "program".to_string(),
+            "-f".to_string(),
+            "file".to_string(),
             "--unknown".to_string(),
+            "un".to_string(),
         ];
-        let result = std::panic::catch_unwind(|| parse_args(args));
+        let result = parse_args(args);
         assert!(result.is_err());
+        assert_eq!(result.unwrap_err(), "unknown flag: --unknown".to_string());
     }
 }
