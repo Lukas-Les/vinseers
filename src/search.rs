@@ -1,6 +1,6 @@
 use regex::Regex;
 
-fn search(content: &String, re_pattern: &String) -> Vec<String> {
+pub fn search(content: &String, re_pattern: &String) -> Vec<String> {
     let re = Regex::new(re_pattern).unwrap();
     re.find_iter(content)
         .map(|mat| mat.as_str().to_string())
