@@ -42,7 +42,7 @@ pub fn parse_args(args: Vec<String>) -> Result<Config, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::inputs::config::{Config};
+    use crate::inputs::config::Config;
 
     #[test]
     fn test_parse_args_with_file() {

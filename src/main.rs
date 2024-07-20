@@ -18,7 +18,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     let cfg: Config = parse_args(args).expect("Failed configuration");
     if let Err(e) = run(cfg){
-        println!("Application error: {e}");
+        eprintln!("Application error: {e}");
         process::exit(1);
     }
 }
@@ -73,4 +73,44 @@ fn walk_directory(path: &Path) -> Vec<String> {
         }
     }
     file_names
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::walk_directory;
+    use std::fs::{self, File};
+    use tempfile::tempdir;
+
+    #[test]
+    fn test_walk_directory() {
+        // Create a temporary directory
+        let temp_dir = tempdir().expect("Failed to create temp dir");
+        let temp_path = temp_dir.path();
+
+        // Create some files and directories inside the temporary directory
+        let file1_path = temp_path.join("file1.txt");
+        File::create(&file1_path).expect("Failed to create file1");
+
+        let sub_dir = temp_path.join("sub_dir");
+        fs::create_dir(&sub_dir).expect("Failed to create sub_dir");
+
+        let file2_path = sub_dir.join("file2.txt");
+        File::create(&file2_path).expect("Failed to create file2");
+
+        // Run the walk_directory function
+        let result = walk_directory(temp_path);
+
+        // Convert the paths to strings for comparison
+        let expected_files = vec![
+            file1_path.to_str().unwrap().to_string(),
+            file2_path.to_str().unwrap().to_string(),
+        ];
+
+        // Check that the result matches the expected output
+        assert_eq!(result.len(), 2);
+        for file in expected_files {
+            assert!(result.contains(&file));
+        }
+    }
 }
