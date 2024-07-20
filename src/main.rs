@@ -5,10 +5,11 @@ mod outputs;
 use std::env;
 use std::error::Error;
 use std::fs;
+use std::path::Path;
 use std::process;
 
-use inputs::parse::parse_args;
 use inputs::config::Config;
+use inputs::parse::parse_args;
 use search::search;
 use outputs::outputs::format;
 
@@ -27,7 +28,10 @@ fn run(cfg: Config) -> Result<(), Box<dyn Error>> {
     let mut target_files: Vec<String> = Vec::new();
     if let Some(v) = &cfg.target_file_path {
         target_files.push(v.clone());
+    } else {
+        target_files = walk_directory(Path::new(&cfg.target_dir.unwrap()))
     }
+
     let mut result: Vec<String> = Vec::new();
     for target_file in target_files {
         let content = match fs::read_to_string(&target_file) {
@@ -46,4 +50,27 @@ fn run(cfg: Config) -> Result<(), Box<dyn Error>> {
         println!("{}", line);
     }
     Ok(())
+}
+
+
+fn walk_directory(path: &Path) -> Vec<String> {
+    let mut file_names = Vec::new();
+    if path.is_dir() {
+        if let Ok(entries) = fs::read_dir(path) {
+            for entry in entries {
+                if let Ok(entry) = entry {
+                    let entry_path = entry.path();
+                    if entry_path.is_file() {
+                        if let Some(file_name) = entry_path.to_str() {
+                            file_names.push(file_name.to_string());
+                        }
+                    } else if entry_path.is_dir() {
+                        let mut child_files = walk_directory(&entry_path);
+                        file_names.append(&mut child_files);
+                    }
+                }
+            }
+        }
+    }
+    file_names
 }
