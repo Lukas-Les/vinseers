@@ -1,0 +1,10 @@
+[package]
+name = "vinseers-cli"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+vinseers = { path = "../vinseers" }
+
+[dev-dependencies]
+tempfile = "3.10.1"

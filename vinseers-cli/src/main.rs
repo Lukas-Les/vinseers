@@ -1,6 +1,4 @@
 mod inputs;
-mod search;
-mod outputs;
 
 use std::env;
 use std::error::Error;
@@ -8,10 +6,11 @@ use std::fs;
 use std::path::Path;
 use std::process;
 
+use vinseers::{outputs, search};
+
 use inputs::config::Config;
 use inputs::parse::parse_args;
-use search::search;
-use outputs::outputs::format;
+
 
 
 fn main() {
@@ -40,9 +39,9 @@ fn run(cfg: Config) -> Result<(), Box<dyn Error>> {
                 eprintln!("{}", e);
                 continue; },
         };
-        let matches = search(&content, &cfg.re_pattern);
+        let matches = search::search(&content, &cfg.re_pattern);
         if !matches.is_empty() {
-            let result_line = format(&target_file, matches);
+            let result_line = outputs::format(&target_file, matches);
             result.push(result_line);
         }
     }

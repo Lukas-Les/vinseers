@@ -116,8 +116,19 @@ name = "vinseers"
 version = "0.1.0"
 dependencies = [
  "regex",
- "tempfile",
 ]
+
+[[package]]
+name = "vinseers-cli"
+version = "0.1.0"
+dependencies = [
+ "tempfile",
+ "vinseers",
+]
+
+[[package]]
+name = "vinseers-gui"
+version = "0.1.0"
 
 [[package]]
 name = "windows-sys"

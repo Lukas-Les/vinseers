@@ -4,8 +4,6 @@ pub fn format(target_file_path: &String, results: Vec<String>) -> String {
 
 #[cfg(test)]
 mod tests {
-    use std::result;
-
     use super::format;
 
     #[test]
