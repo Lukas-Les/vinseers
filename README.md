@@ -10,6 +10,7 @@ This mono-repo contains 3 rust projects:
     - [Build](#build)
     - [Use Cli Tool](#use-cli-tool)
     - [Use Gui Tool](#use-gui-tool)
+    - [Documentation](#documentation)
 
 ## Usage
 
@@ -43,3 +44,9 @@ If -o is not provided, the result will be printed in console.
 
 ### Use gui tool
 Just build and run :)
+
+### Documentation
+To build the documentation run
+```shell
+cargo doc --no-deps --open
+```
