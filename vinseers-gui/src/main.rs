@@ -1,6 +1,4 @@
 mod constants;
-mod search;
-mod outputs;
 
 use std::fs::{File, read_dir};
 use std::io::prelude::*;
@@ -10,8 +8,8 @@ use druid::{AppLauncher, Data, Env, Lens, LocalizedString, Widget, WidgetExt, Wi
 use druid::commands::{SHOW_OPEN_PANEL, OPEN_FILES};
 use druid::{FileDialogOptions, FileSpec, Target, Selector, Command};
 
-use search::search;
-use outputs::format;
+use vinseers::{outputs, search};
+
 
 #[derive(Clone, Data, Lens)]
 struct AppState {
@@ -129,7 +127,8 @@ fn process_path_recursive(path: &str, re_pattern: &str) -> Vec<String> {
         if let Ok(mut file) = File::open(path) {
             let mut buffer = String::new();
             if file.read_to_string(&mut buffer).is_ok() {
-                let result = format(path.to_str().unwrap(), search(&buffer, &re_pattern.to_string()));
+                let path_string = path.to_str().unwrap().to_string();
+                let result = outputs::format(&path_string, search::search(&buffer, &re_pattern.to_string()));
                 results.push(result);
             }
         }

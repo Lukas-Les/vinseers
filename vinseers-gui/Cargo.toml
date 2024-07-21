@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+vinseers = { path = "../vinseers" }
+
 druid = "0.8.3"
 im = "15.1.0"
 regex = "1.10.5"

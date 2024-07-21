@@ -1592,6 +1592,7 @@ dependencies = [
  "druid",
  "im",
  "regex",
+ "vinseers",
 ]
 
 [[package]]
