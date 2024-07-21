@@ -9,6 +9,7 @@ This mono-repo contains 3 rust projects:
 - [Usage](#usage)
     - [Build](#build)
     - [Use Cli Tool](#use-cli-tool)
+    - [Use Gui Tool](#use-gui-tool)
 
 ## Usage
 
