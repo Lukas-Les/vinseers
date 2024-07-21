@@ -1,16 +1,14 @@
 # vinseers mono-repo
-vin see rs
-
-## Table of Contents
-- [Usage](#usage)
-    - [Build](#build)
-    - [Use Cli Tool](#use-cli-tool)
-
 
 This mono-repo contains 3 rust projects:
 - [vinseers lib](https://github.com/Lukas-Les/vinseers/tree/main/vinseers)
 - [vinseers-cli](https://github.com/Lukas-Les/vinseers/tree/main/vinseers-cli)
 - [vinsers-gui](https://github.com/Lukas-Les/vinseers/tree/main/vinseers-gui)
+
+## Table of Contents
+- [Usage](#usage)
+    - [Build](#build)
+    - [Use Cli Tool](#use-cli-tool)
 
 ## Usage
 
