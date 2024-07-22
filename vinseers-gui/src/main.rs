@@ -5,11 +5,10 @@ use std::io::prelude::*;
 
 use druid::widget::{Button, Flex, Scroll, TextBox};
 use druid::{AppLauncher, Data, Env, Lens, LocalizedString, Widget, WidgetExt, WindowDesc};
-use druid::commands::{SHOW_OPEN_PANEL, OPEN_FILES};
+use druid::commands::{SHOW_OPEN_PANEL, OPEN_FILE, OPEN_FILES};
 use druid::{FileDialogOptions, FileSpec, Target, Selector, Command};
 
 use vinseers::{outputs, search};
-
 
 #[derive(Clone, Data, Lens)]
 struct AppState {
@@ -18,6 +17,8 @@ struct AppState {
 }
 
 const UPDATE_CONTENT: Selector<String> = Selector::new("update-content");
+const OPEN_FILE_PATH: Selector<Vec<std::path::PathBuf>> = Selector::new("druid-builtin.open-file-path");
+const OPEN_FILES_PATH: Selector<Vec<std::path::PathBuf>> = Selector::new("druid-builtin.open-files-path");
 
 fn build_ui() -> impl Widget<AppState> {
     let select_files_button = Button::new("Select files")
@@ -44,7 +45,6 @@ fn build_ui() -> impl Widget<AppState> {
                 .button_text("Scan");
             ctx.submit_command(SHOW_OPEN_PANEL.with(options).to(Target::Auto));
         });
-
 
     let file_content = TextBox::multiline()
         .with_placeholder("Results will be displayed here")
@@ -82,7 +82,6 @@ fn main() -> Result<(), druid::PlatformError> {
 
 struct AppDelegate;
 
-
 impl druid::AppDelegate<AppState> for AppDelegate {
     fn command(
         &mut self,
@@ -92,30 +91,64 @@ impl druid::AppDelegate<AppState> for AppDelegate {
         data: &mut AppState,
         _env: &Env,
     ) -> druid::Handled {
-        println!("reading cmd");
         println!("Received command: {:?}", cmd);
+
+        // Check for OPEN_FILES command
         if let Some(file_infos) = cmd.get(OPEN_FILES) {
-            println!("OPEN_FILE command received");
-            let mut results = Vec::new();
+            println!("OPEN_FILES command received");
             for file_info in file_infos {
                 if let Some(path) = file_info.path().to_str() {
-                    results.extend(process_path_recursive(path, &data.re_pattern));
+                    process_file_info(ctx, path, data);
                 }
             }
-            println!("{:?}", &results);
-            let results_str = results.join("\n");
-            ctx.submit_command(Command::new(UPDATE_CONTENT, results_str, Target::Auto));
+            return druid::Handled::Yes;
+        }
+
+        // Check for OPEN_FILE command
+        if let Some(file_info) = cmd.get(OPEN_FILE) {
+            println!("OPEN_FILE command received");
+            if let Some(path) = file_info.path().to_str() {
+                process_file_info(ctx, path, data);
+            }
+            return druid::Handled::Yes;
+        }
+
+        // Check for druid-builtin.open-file-path command
+        if let Some(file_paths) = cmd.get(OPEN_FILE_PATH) {
+            println!("druid-builtin.open-file-path command received");
+            for file_path in file_paths {
+                if let Some(path_str) = file_path.to_str() {
+                    process_file_info(ctx, path_str, data);
+                }
+            }
+            return druid::Handled::Yes;
+        }
+
+        // Check for druid-builtin.open-files-path command
+        if let Some(file_paths) = cmd.get(OPEN_FILES_PATH) {
+            println!("druid-builtin.open-files-path command received");
+            for file_path in file_paths {
+                if let Some(path_str) = file_path.to_str() {
+                    process_file_info(ctx, path_str, data);
+                }
+            }
             return druid::Handled::Yes;
         }
 
         if let Some(new_content) = cmd.get(UPDATE_CONTENT) {
-            println!("updating");
+            println!("Updating content");
             data.result = format!("{}\n{}", data.result, new_content);
             return druid::Handled::Yes;
         }
 
         druid::Handled::No
     }
+}
+
+fn process_file_info(ctx: &mut druid::DelegateCtx, path: &str, data: &mut AppState) {
+    let results = process_path_recursive(path, &data.re_pattern);
+    let results_str = results.join("\n");
+    ctx.submit_command(Command::new(UPDATE_CONTENT, results_str, Target::Auto));
 }
 
 fn process_path_recursive(path: &str, re_pattern: &str) -> Vec<String> {
