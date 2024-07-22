@@ -22,6 +22,7 @@ const UPDATE_CONTENT: Selector<String> = Selector::new("update-content");
 fn build_ui() -> impl Widget<AppState> {
     let select_files_button = Button::new("Select files")
         .on_click(|ctx, _data: &mut AppState, _env| {
+            println!("files button clicked");
             let options = FileDialogOptions::new()
                 .allowed_types(vec![FileSpec::new("Text files", &constants::ALLOWED_FILE_TYPES)])
                 .default_type(FileSpec::new("Text file", &["txt"]))
@@ -34,6 +35,7 @@ fn build_ui() -> impl Widget<AppState> {
     
     let select_dirs_button = Button::new("Select directories")
         .on_click(|ctx, _data: &mut AppState, _env| {
+            println!("dir button clicked");
             let options = FileDialogOptions::new()
                 .select_directories()
                 .multi_selection()
@@ -62,6 +64,7 @@ fn build_ui() -> impl Widget<AppState> {
 }
 
 fn main() -> Result<(), druid::PlatformError> {
+    println!("hello");
     let main_window = WindowDesc::new(build_ui())
         .title(LocalizedString::new("vinseers").with_placeholder("Search VIN"))
         .window_size((1000.0, 400.0));
@@ -89,19 +92,24 @@ impl druid::AppDelegate<AppState> for AppDelegate {
         data: &mut AppState,
         _env: &Env,
     ) -> druid::Handled {
+        println!("reading cmd");
+        println!("Received command: {:?}", cmd);
         if let Some(file_infos) = cmd.get(OPEN_FILES) {
+            println!("OPEN_FILE command received");
             let mut results = Vec::new();
             for file_info in file_infos {
                 if let Some(path) = file_info.path().to_str() {
                     results.extend(process_path_recursive(path, &data.re_pattern));
                 }
             }
+            println!("{:?}", &results);
             let results_str = results.join("\n");
             ctx.submit_command(Command::new(UPDATE_CONTENT, results_str, Target::Auto));
             return druid::Handled::Yes;
         }
 
         if let Some(new_content) = cmd.get(UPDATE_CONTENT) {
+            println!("updating");
             data.result = format!("{}\n{}", data.result, new_content);
             return druid::Handled::Yes;
         }
@@ -114,6 +122,7 @@ fn process_path_recursive(path: &str, re_pattern: &str) -> Vec<String> {
     let mut results = Vec::new();
     let path = std::path::Path::new(path);
     if path.is_dir() {
+        println!("Processing directory: {}", path.display());
         if let Ok(entries) = read_dir(path) {
             for entry in entries {
                 if let Ok(entry) = entry {
@@ -124,13 +133,18 @@ fn process_path_recursive(path: &str, re_pattern: &str) -> Vec<String> {
             }
         }
     } else {
+        println!("Processing file: {}", path.display());
         if let Ok(mut file) = File::open(path) {
             let mut buffer = String::new();
             if file.read_to_string(&mut buffer).is_ok() {
                 let path_string = path.to_str().unwrap().to_string();
                 let result = outputs::format(&path_string, search::search(&buffer, &re_pattern.to_string()));
                 results.push(result);
+            } else {
+                println!("Failed to read file: {}", path.display());
             }
+        } else {
+            println!("Failed to open file: {}", path.display());
         }
     }
     results

@@ -1,7 +1,14 @@
 [package]
 name = "vinseers-gui"
+description = "Vin searching tool"
 version = "0.1.0"
 edition = "2021"
+
+[package.metadata.bundle]
+name = "vinseers-gui"
+identifier = "vinseers"
+version = "0.1.0"
+
 
 [dependencies]
 vinseers = { path = "../vinseers" }
