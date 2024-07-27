@@ -11,17 +11,14 @@ use vinseers::{outputs, search};
 use inputs::config::Config;
 use inputs::parse::parse_args;
 
-
-
 fn main() {
     let args: Vec<String> = env::args().collect();
     let cfg: Config = parse_args(args).expect("Failed configuration");
-    if let Err(e) = run(cfg){
+    if let Err(e) = run(cfg) {
         eprintln!("Application error: {e}");
         process::exit(1);
     }
 }
-
 
 fn run(cfg: Config) -> Result<(), Box<dyn Error>> {
     let mut target_files: Vec<String> = Vec::new();
@@ -35,9 +32,10 @@ fn run(cfg: Config) -> Result<(), Box<dyn Error>> {
     for target_file in target_files {
         let content = match fs::read_to_string(&target_file) {
             Ok(f) => f,
-            Err(e) => { 
+            Err(e) => {
                 eprintln!("{}", e);
-                continue; },
+                continue;
+            }
         };
         let matches = search::search(&content, &cfg.re_pattern);
         if !matches.is_empty() {
@@ -50,7 +48,6 @@ fn run(cfg: Config) -> Result<(), Box<dyn Error>> {
     }
     Ok(())
 }
-
 
 fn walk_directory(path: &Path) -> Vec<String> {
     let mut file_names = Vec::new();
@@ -73,7 +70,6 @@ fn walk_directory(path: &Path) -> Vec<String> {
     }
     file_names
 }
-
 
 #[cfg(test)]
 mod tests {

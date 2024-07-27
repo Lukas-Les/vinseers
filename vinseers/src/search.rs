@@ -5,9 +5,7 @@ pub fn search(content: &String, re_pattern: &String) -> Vec<String> {
     re.find_iter(content)
         .map(|mat| mat.as_str().to_string())
         .collect()
-    
 }
-
 
 #[cfg(test)]
 mod tests {

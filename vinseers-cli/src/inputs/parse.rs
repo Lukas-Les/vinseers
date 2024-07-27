@@ -14,13 +14,15 @@ pub fn parse_args(args: Vec<String>) -> Result<Config, String> {
             i += 1;
             continue;
         }
-        let v = Some(args[i+1].clone());
+        let v = Some(args[i + 1].clone());
         match flag {
-            "-f" | "--file" => { target_file_path = v },
-            "-d" | "--dir" => { target_dir = v },
-            "-o" | "--output" => { output_file = v},
-            "-m" | "--max" => { max_results = Some(v.unwrap().parse::<u32>().map_err(|e| e.to_string())?) },
-            "-r" | "--re" => { re_pattern = v },
+            "-f" | "--file" => target_file_path = v,
+            "-d" | "--dir" => target_dir = v,
+            "-o" | "--output" => output_file = v,
+            "-m" | "--max" => {
+                max_results = Some(v.unwrap().parse::<u32>().map_err(|e| e.to_string())?)
+            }
+            "-r" | "--re" => re_pattern = v,
             _ => {
                 return Err(format!("unknown flag: {}", args[i]));
             }
@@ -36,7 +38,13 @@ pub fn parse_args(args: Vec<String>) -> Result<Config, String> {
         return Err("Provide target file or directory!".to_string());
     }
 
-    Config::new(target_file_path, target_dir, output_file, max_results, re_pattern)
+    Config::new(
+        target_file_path,
+        target_dir,
+        output_file,
+        max_results,
+        re_pattern,
+    )
 }
 
 #[cfg(test)]
@@ -112,17 +120,21 @@ mod tests {
         ];
         let result = parse_args(args);
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), "Provide only target file or directory, not both!".to_string());
+        assert_eq!(
+            result.unwrap_err(),
+            "Provide only target file or directory, not both!".to_string()
+        );
     }
 
     #[test]
     fn test_parse_args_error_neither_file_nor_dir() {
-        let args = vec![
-            "program".to_string(),
-        ];
+        let args = vec!["program".to_string()];
         let result = parse_args(args);
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), "Provide target file or directory!".to_string());
+        assert_eq!(
+            result.unwrap_err(),
+            "Provide target file or directory!".to_string()
+        );
     }
 
     #[test]

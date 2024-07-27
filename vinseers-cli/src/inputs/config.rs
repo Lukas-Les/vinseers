@@ -1,7 +1,6 @@
 const DEFAULT_MAX_RESULTS: i32 = -1;
 const DEFAULT_RE_PATTERN: &str = "(?i)\\b[A-HJ-NPR-Z0-9]{17}\\b";
 
-
 #[derive(Debug)]
 pub struct Config {
     pub target_file_path: Option<String>,
@@ -21,7 +20,7 @@ impl Config {
     ) -> Result<Self, String> {
         if target_file_path.is_none() && target_dir.is_none() {
             return Err("Provide target file or directory!".to_string());
-        } 
+        }
         if target_file_path.is_some() && target_dir.is_some() {
             return Err("Provide only target file or directory, not both!".to_string());
         }
@@ -44,7 +43,6 @@ impl Config {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -52,14 +50,18 @@ mod tests {
     #[test]
     fn test_config_with_target_file_path() {
         let config = Config::new(
-            Some("path/to/target/file".to_string()), 
-            None, 
-            Some("output/file".to_string()), 
-            Some(10), 
-            Some("\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string())
-        ).unwrap();
+            Some("path/to/target/file".to_string()),
+            None,
+            Some("output/file".to_string()),
+            Some(10),
+            Some("\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string()),
+        )
+        .unwrap();
 
-        assert_eq!(config.target_file_path, Some("path/to/target/file".to_string()));
+        assert_eq!(
+            config.target_file_path,
+            Some("path/to/target/file".to_string())
+        );
         assert_eq!(config.target_dir, None);
         assert_eq!(config.output_file, Some("output/file".to_string()));
         assert_eq!(config.max_results, 10);
@@ -69,12 +71,13 @@ mod tests {
     #[test]
     fn test_config_with_target_dir() {
         let config = Config::new(
-            None, 
-            Some("path/to/target/dir".to_string()), 
-            Some("output/file".to_string()), 
-            Some(10), 
-            Some("\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string())
-        ).unwrap();
+            None,
+            Some("path/to/target/dir".to_string()),
+            Some("output/file".to_string()),
+            Some(10),
+            Some("\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string()),
+        )
+        .unwrap();
 
         assert_eq!(config.target_file_path, None);
         assert_eq!(config.target_dir, Some("path/to/target/dir".to_string()));
@@ -86,14 +89,18 @@ mod tests {
     #[test]
     fn test_config_default_max_results_and_pattern() {
         let config = Config::new(
-            Some("path/to/target/file".to_string()), 
-            None, 
-            Some("output/file".to_string()), 
-            None, 
-            None
-        ).unwrap();
+            Some("path/to/target/file".to_string()),
+            None,
+            Some("output/file".to_string()),
+            None,
+            None,
+        )
+        .unwrap();
 
-        assert_eq!(config.target_file_path, Some("path/to/target/file".to_string()));
+        assert_eq!(
+            config.target_file_path,
+            Some("path/to/target/file".to_string())
+        );
         assert_eq!(config.target_dir, None);
         assert_eq!(config.output_file, Some("output/file".to_string()));
         assert_eq!(config.max_results, DEFAULT_MAX_RESULTS);
@@ -103,28 +110,34 @@ mod tests {
     #[test]
     fn test_config_error_both_target_file_and_dir() {
         let config = Config::new(
-            Some("path/to/target/file".to_string()), 
-            Some("path/to/target/dir".to_string()), 
-            Some("output/file".to_string()), 
-            Some(10), 
-            Some("\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string())
+            Some("path/to/target/file".to_string()),
+            Some("path/to/target/dir".to_string()),
+            Some("output/file".to_string()),
+            Some(10),
+            Some("\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string()),
         );
 
         assert!(config.is_err());
-        assert_eq!(config.unwrap_err(), "Provide only target file or directory, not both!".to_string());
+        assert_eq!(
+            config.unwrap_err(),
+            "Provide only target file or directory, not both!".to_string()
+        );
     }
 
     #[test]
     fn test_config_error_neither_target_file_nor_dir() {
         let config = Config::new(
-            None, 
-            None, 
-            Some("output/file".to_string()), 
-            Some(10), 
-            Some("\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string())
+            None,
+            None,
+            Some("output/file".to_string()),
+            Some(10),
+            Some("\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string()),
         );
 
         assert!(config.is_err());
-        assert_eq!(config.unwrap_err(), "Provide target file or directory!".to_string());
+        assert_eq!(
+            config.unwrap_err(),
+            "Provide target file or directory!".to_string()
+        );
     }
 }
