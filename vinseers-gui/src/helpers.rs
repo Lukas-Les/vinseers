@@ -1,23 +1,8 @@
-use std::fs::{File, read_dir};
-use std::path::PathBuf;
+use std::fs::{read_dir, File};
 use std::io::{self, Read};
+use std::path::PathBuf;
 
 use iced::widget::text_editor;
-
-
-fn option_vec_pathbuf_to_content(option_vec: &Option<Vec<PathBuf>>) -> text_editor::Content {
-    match option_vec {
-        Some(vec) => {
-            let joined_paths: String = vec
-                .iter()
-                .map(|pathbuf| pathbuf.to_str().unwrap_or("Invalid UTF-8"))
-                .collect::<Vec<&str>>()
-                .join("\n");
-            text_editor::Content::with_text(&joined_paths)
-        }
-        None => text_editor::Content::new(),
-    }
-}
 
 pub fn process_paths_recursive(paths: &Option<Vec<PathBuf>>, re_pattern: &str) -> Vec<String> {
     let mut results = Vec::new();
