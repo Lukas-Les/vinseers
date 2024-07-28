@@ -65,8 +65,7 @@ impl Sandbox for Vinseers {
     }
 
     fn view(&self) -> Element<Self::Message> {
-        let default_checkbox = checkbox("Default", self.default)
-            .on_toggle(Message::SelectDir);
+        let vin_checkbox = checkbox(VidType::Vin.to_string(), is_checked)
 
         let top_row = Row::new()
             .push(Button::new("Select Files").on_press(Message::SelectFiles))
@@ -89,6 +88,7 @@ enum Message {
     VidSelected(VidType),
     AnyActionPerformed(text_editor::Action),
 }
+
 
 #[derive(Clone, Debug, PartialEq)]
 enum VidType {
