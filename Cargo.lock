@@ -3276,13 +3276,13 @@ version = "0.1.0"
 dependencies = [
  "pdf-extract",
  "regex",
+ "tempfile",
 ]
 
 [[package]]
 name = "vinseers-cli"
 version = "0.1.0"
 dependencies = [
- "tempfile",
  "vinseers",
 ]
 

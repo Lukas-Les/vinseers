@@ -1,43 +1,45 @@
-use std::fs::{read_dir, File};
-use std::io::{self, Read};
+use std::fs;
 use std::path::PathBuf;
 
-use iced::widget::text_editor;
+use vinseers::helpers::walk_directory;
+use vinseers::parsers::pdf::parse_pdf;
 
-pub fn process_paths_recursive(paths: &Option<Vec<PathBuf>>, re_pattern: &str) -> Vec<String> {
+pub fn process_paths(paths: &Vec<PathBuf>, re_pattern: &str) -> Vec<String> {
     let mut results = Vec::new();
-
-    if let Some(paths) = paths {
-        for path in paths {
-            let path = path.as_path();
-            if path.is_dir() {
-                println!("Processing directory: {}", path.display());
-                if let Ok(entries) = read_dir(path) {
-                    let mut sub_paths = Vec::new();
-                    for entry in entries {
-                        if let Ok(entry) = entry {
-                            sub_paths.push(entry.path());
-                        }
-                    }
-                    results.extend(process_paths_recursive(&Some(sub_paths), re_pattern));
-                }
-            } else {
-                println!("Processing file: {}", path.display());
-                if let Ok(mut file) = File::open(path) {
-                    let mut buffer = String::new();
-                    if file.read_to_string(&mut buffer).is_ok() {
-                        let path_string = path.to_str().unwrap_or_default().to_string();
-                        let result = vinseers::outputs::format(
-                            &path_string,
-                            vinseers::search::search(&buffer, &re_pattern.to_string()),
-                        );
-                        results.push(result);
-                    } else {
-                        println!("Failed to read file: {}", path.display());
-                    }
+    let all_targets: Vec<PathBuf> = paths
+        .iter()
+        .flat_map(
+            |pathbuf| {
+                if pathbuf.is_dir() {
+                    walk_directory(pathbuf.as_path())
                 } else {
-                    println!("Failed to open file: {}", path.display());
+                    vec![pathbuf.clone()]
                 }
+            }
+        )
+        .collect();
+
+    for path in all_targets.iter() {
+        let buffer;
+        if path.extension().unwrap() == "pdf" {
+            buffer = parse_pdf(path);
+        } else {
+            if let Ok(file) = fs::read_to_string(path) {
+                buffer = Some(file);
+            } else {
+                buffer = None;
+            }
+        }
+        match buffer {
+            Some(v) => {
+                let result = vinseers::outputs::format(
+                    &path,
+                    vinseers::search::search(&v, &re_pattern.to_string()),
+                );
+                results.push(result);
+            },
+            None => {
+                results.push(path.to_str().unwrap().to_string());
             }
         }
     }
