@@ -3,10 +3,11 @@ mod inputs;
 use std::env;
 use std::error::Error;
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process;
 
 use vinseers::{outputs, search};
+use vinseers::parsers::pdf::parse_pdf;
 
 use inputs::config::Config;
 use inputs::parse::parse_args;
@@ -27,16 +28,21 @@ fn run(cfg: Config) -> Result<(), Box<dyn Error>> {
     } else {
         target_files = walk_directory(Path::new(&cfg.target_dir.unwrap()))
     }
-
     let mut result: Vec<String> = Vec::new();
     for target_file in target_files {
-        let content = match fs::read_to_string(&target_file) {
-            Ok(f) => f,
-            Err(e) => {
-                eprintln!("{}", e);
-                continue;
-            }
-        };
+        let content: String;
+        if target_file.ends_with(".pdf") {
+            let target_file_as_path_buf: PathBuf = target_file.clone().into();
+            content = parse_pdf(&target_file_as_path_buf).unwrap_or_default();
+        } else {
+            content = match fs::read_to_string(&target_file) {
+                Ok(f) => f,
+                Err(e) => {
+                    eprintln!("{}", e);
+                    continue;
+                }
+            };
+        }
         let matches = search::search(&content, &cfg.re_pattern);
         if !matches.is_empty() {
             let result_line = outputs::format(&target_file, matches);
