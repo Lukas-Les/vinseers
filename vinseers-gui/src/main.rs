@@ -43,13 +43,17 @@ impl Sandbox for Vinseers {
                 let target_paths = FileDialog::new()
                     .add_filter("text", &constants::ALLOWED_FILES)
                     .pick_files();
-                let res = helpers::process_paths_recursive(&target_paths, &self.vin_re);
-                self.content = Content::with_text(res.join("\n").as_str());
+                if let Some(paths) = target_paths {
+                    let result = helpers::process_paths(&paths, &self.vin_re);
+                    self.content = Content::with_text(result.join("\n").as_str());
+                }
             }
             Message::SelectDir => {
                 let target_paths = FileDialog::new().pick_folders();
-                let res = helpers::process_paths_recursive(&target_paths, &self.vin_re);
-                self.content = Content::with_text(res.join("\n").as_str());
+                if let Some(paths) = target_paths {
+                    let result = helpers::process_paths(&paths, &self.vin_re);
+                    self.content = Content::with_text(result.join("\n").as_str());
+                }
             }
             Message::ResetResult => {
                 self.content = text_editor::Content::with_text(constants::RESULT_TEXT_DEFAULT);
