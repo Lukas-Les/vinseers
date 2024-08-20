@@ -15,7 +15,6 @@ name = "vinseers"
 identifier = "vinseers"
 icon = ["images/vinseers-icon.png"]
 version = "0.1.1"
-copyright = "Copyright (c) Jane Doe 2016. All rights reserved."
 category = "Developer Tool"
 short_description = "Extract VIN from documents"
 long_description = """
