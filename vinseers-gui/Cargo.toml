@@ -20,6 +20,3 @@ short_description = "Extract VIN from documents"
 long_description = """
 Extract vehicle identification id from documents such as html, pdf, txt.
 """
-deb_depends = ["libgl1-mesa-glx", "libsdl2-2.0-0 (>= 2.0.5)"]
-osx_frameworks = ["SDL2"]
-osx_url_schemes = ["com.doe.exampleapplication"]
