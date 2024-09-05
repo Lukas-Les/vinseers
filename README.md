@@ -50,3 +50,6 @@ To build the documentation run
 ```shell
 cargo doc --no-deps --open
 ```
+
+
+# [Roadmap](https://docs.google.com/spreadsheets/d/12Dp7DlwmRPYVgzjRKY51OGcWUiygf9YCNgGr3l3T20Y/edit?usp=sharing)
