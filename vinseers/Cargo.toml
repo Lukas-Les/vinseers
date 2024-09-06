@@ -5,6 +5,7 @@ version = "0.1.1"
 edition = "2021"
 
 [dependencies]
+calamine = "0.25.0"
 pdf-extract = "0.7.7"
 regex = "1.10.5"
 
