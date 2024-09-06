@@ -8,15 +8,13 @@ pub fn process_paths(paths: &Vec<PathBuf>, re_pattern: &str) -> Vec<String> {
     let mut results = Vec::new();
     let all_targets: Vec<PathBuf> = paths
         .iter()
-        .flat_map(
-            |pathbuf| {
-                if pathbuf.is_dir() {
-                    walk_directory(pathbuf.as_path())
-                } else {
-                    vec![pathbuf.clone()]
-                }
+        .flat_map(|pathbuf| {
+            if pathbuf.is_dir() {
+                walk_directory(pathbuf.as_path())
+            } else {
+                vec![pathbuf.clone()]
             }
-        )
+        })
         .collect();
 
     for path in all_targets.iter() {
@@ -37,7 +35,7 @@ pub fn process_paths(paths: &Vec<PathBuf>, re_pattern: &str) -> Vec<String> {
                     vinseers::search::search(&v, &re_pattern.to_string()),
                 );
                 results.push(result);
-            },
+            }
             None => {
                 results.push(path.to_str().unwrap().to_string());
             }

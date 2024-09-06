@@ -1,18 +1,13 @@
 mod constants;
 mod helpers;
 
-use std::fs::{read_dir, File};
-use std::io::{self, Read};
-use std::path::PathBuf;
 use std::string::ToString;
 
 use rfd::FileDialog;
 
 use iced::widget::text_editor::Content;
-use iced::widget::{
-    checkbox, text, text_editor, Button, Column, Container, PickList, Row, TextInput,
-};
-use iced::{alignment, Alignment, Element, Renderer, Sandbox, Settings, Theme};
+use iced::widget::{text_editor, Button, Column, Container, Row};
+use iced::{Element, Sandbox, Settings};
 
 pub fn main() -> iced::Result {
     Vinseers::run(Settings::default())
