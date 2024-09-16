@@ -79,7 +79,7 @@ install_dev_tools() {
 
 # Main logic starts here
 # Define the GitHub repository URL and binary name
-REPO_URL="git@github.com:Lukas-Les/vinseers.git"
+REPO_URL="https://github.com/Lukas-Les/vinseers.git"
 BINARY_NAME="vinseers-gui"
 REPOSITORY_DIR="/tmp/vinseers"
 
