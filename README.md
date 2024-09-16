@@ -17,8 +17,13 @@ This mono-repo contains 3 rust projects:
 
 ### Installation
 To install vinseers-gui to your system, run:
-```
+```sh
 curl https://raw.githubusercontent.com/Lukas-Les/vinseers/main/vinseers-gui/scripts/install-unix-like.sh | sh
+```
+
+To check installation scrpit before installation, run:
+```sh
+curl https://raw.githubusercontent.com/Lukas-Les/vinseers/main/vinseers-gui/scripts/install-unix-like.sh | less
 ```
 
 
