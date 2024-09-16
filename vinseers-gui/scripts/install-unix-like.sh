@@ -122,7 +122,7 @@ if [ ! -d "$TARGET_DIR" ]; then
 fi
 
 echo "Moving binary to $TARGET_DIR..."
-mv "$BINARY_PATH" "$TARGET_DIR/"
+sudo mv "$BINARY_PATH" "$TARGET_DIR/"
 
 
 echo "Binary moved to $TARGET_DIR and is ready to use!"

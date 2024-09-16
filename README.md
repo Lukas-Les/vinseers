@@ -7,12 +7,20 @@ This mono-repo contains 3 rust projects:
 
 ## Table of Contents
 - [Usage](#usage)
+    - [Installation](#installation)
     - [Build](#build)
     - [Use Cli Tool](#use-cli-tool)
     - [Use Gui Tool](#use-gui-tool)
     - [Documentation](#documentation)
 
 ## Usage
+
+### Installation
+To install vinseers-gui to your system, run:
+```
+curl https://raw.githubusercontent.com/Lukas-Les/vinseers/main/vinseers-gui/scripts/install-unix-like.sh | sh
+```
+
 
 ### Build
 To build both binaries run 
