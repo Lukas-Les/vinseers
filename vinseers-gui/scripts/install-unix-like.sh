@@ -116,13 +116,13 @@ else
 fi
 
 # Move the binary to a directory in the user's PATH
-TARGET_DIR="/usr/local/bin"
+TARGET_DIR="$HOME/.local/bin"
 if [ ! -d "$TARGET_DIR" ]; then
     mkdir -p "$TARGET_DIR"
 fi
 
 echo "Moving binary to $TARGET_DIR..."
-sudo mv "$BINARY_PATH" "$TARGET_DIR/"
+mv "$BINARY_PATH" "$TARGET_DIR/"
 
 
 echo "Binary moved to $TARGET_DIR and is ready to use!"
