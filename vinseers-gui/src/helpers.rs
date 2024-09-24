@@ -4,6 +4,7 @@ use std::path::PathBuf;
 use vinseers::helpers::walk_directory;
 use vinseers::parsers::{pdf::parse_pdf, xlsx::parse_xlsx};
 
+
 pub fn process_paths(paths: &Vec<PathBuf>, re_pattern: &str) -> Vec<String> {
     let mut results = Vec::new();
     let all_targets: Vec<PathBuf> = paths
@@ -19,15 +20,6 @@ pub fn process_paths(paths: &Vec<PathBuf>, re_pattern: &str) -> Vec<String> {
 
     for path in all_targets.iter() {
         let buffer;
-        // if path.extension().unwrap() == "pdf" {
-        //     buffer = parse_pdf(path);
-        // } else {
-        //     if let Ok(file) = fs::read_to_string(path) {
-        //         buffer = Some(file);
-        //     } else {
-        //         buffer = None;
-        //     }
-        // }
         match path.extension().and_then(|extention| extention.to_str()) {
             Some("pdf") => buffer = parse_pdf(path),
             Some("xlsx") => buffer = parse_xlsx(path),
