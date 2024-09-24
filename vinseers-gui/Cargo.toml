@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 vinseers = { path = "../vinseers" }
 
-iced = "0.12.1"
+iced = "0.13.1"
 rfd = "0.14.1"
 
 
