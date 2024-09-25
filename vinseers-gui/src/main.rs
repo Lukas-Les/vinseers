@@ -22,14 +22,14 @@ fn theme(state: &State) -> Theme {
 
 struct State {
     content: text_editor::Content,
-    vin_re: String,
+    current_regex: String,
 }
 
 impl Default for State {
     fn default() -> Self {
         Self {
             content: text_editor::Content::with_text(constants::RESULT_TEXT_DEFAULT),
-            vin_re: constants::VIN_RE_DEFAULT.to_string(),
+            current_regex: constants::VIN_RE_DEFAULT.to_string(),
         }
     }
 }
@@ -41,14 +41,14 @@ fn update(state: &mut State, message: Message) {
                 .add_filter("text", &constants::ALLOWED_FILES)
                 .pick_files();
             if let Some(paths) = target_paths {
-                let result = helpers::process_paths(&paths, &state.vin_re);
+                let result = helpers::process_paths(&paths, &state.current_regex);
                 state.content = Content::with_text(result.join("\n").as_str());
             }
         }
         Message::SelectDir => {
             let target_paths = FileDialog::new().pick_folders();
             if let Some(paths) = target_paths {
-                let result = helpers::process_paths(&paths, &state.vin_re);
+                let result = helpers::process_paths(&paths, &state.current_regex);
                 state.content = Content::with_text(result.join("\n").as_str());
             }
         }
@@ -87,23 +87,28 @@ enum Message {
     AnyActionPerformed(text_editor::Action),
 }
 
+
+#[derive(Clone, Debug, PartialEq)]
+enum LpnType {
+    Ltu,
+}
+
+
 #[derive(Clone, Debug, PartialEq)]
 enum VidType {
     Vin,
-    Lpn,
+    Lpn(LpnType),
 }
 
 impl VidType {
-    const ALL: &'static [Self] = &[Self::Vin, Self::Lpn];
-}
-
-impl ToString for VidType {
-    fn to_string(&self) -> String {
+    fn to_regex(&self) -> String {
         match self {
-            VidType::Vin => {
-                return "Vin".to_string();
+            Self::Vin => constants::VIN_RE_DEFAULT.to_string(),
+            Self::Lpn(t) => {
+                match t {
+                    LpnType::Ltu => constants::LPN_LTU_RE.to_string(),
+                }
             }
-            VidType::Lpn => return "Lpn".to_string(),
         }
     }
 }
