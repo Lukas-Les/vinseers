@@ -1,5 +1,4 @@
 mod constants;
-mod helpers;
 
 use std::string::ToString;
 
@@ -9,7 +8,8 @@ use iced::widget::text_editor::Content;
 use iced::widget::{row, text_editor, Button, column, PickList};
 use iced::{Element, Theme};
 
-use vinseers::regexes;
+use vinseers::{helpers, regexes};
+
 
 pub fn main() -> iced::Result {
     iced::application("vinseers", update, view)
