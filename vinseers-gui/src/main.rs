@@ -9,6 +9,8 @@ use iced::widget::text_editor::Content;
 use iced::widget::{row, text_editor, Button, column, PickList};
 use iced::{Element, Theme};
 
+use vinseers::regexes;
+
 pub fn main() -> iced::Result {
     iced::application("vinseers", update, view)
         .theme(theme)
@@ -115,10 +117,10 @@ impl VidType {
 
     fn to_regex(&self) -> String {
         match self {
-            Self::Vin => constants::VIN_RE_DEFAULT.to_string(),
+            Self::Vin => regexes::VIN_DEFAULT.to_string(),
             Self::Lpn(t) => {
                 match t {
-                    LpnType::Ltu => constants::LPN_LTU_RE.to_string(),
+                    LpnType::Ltu => regexes::LPN_LTU.to_string(),
                 }
             }
         }
