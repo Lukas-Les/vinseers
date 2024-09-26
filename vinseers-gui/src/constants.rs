@@ -29,4 +29,4 @@ pub const ALLOWED_FILES: [&str; 26] = [
 
 pub const RESULT_TEXT_DEFAULT: &str = "The results will be desplayed here ^^";
 pub const VIN_RE_DEFAULT: &str = "(?i)\\b[A-HJ-NPR-Z0-9]{17}\\b";
-pub const LPN_LTU_RE: &str = r"^[A-Z]{3}\s?\d{3}$";
+pub const LPN_LTU_RE: &str = r"\b[A-Z]{3}[-\s:]?\d{3}\b";
