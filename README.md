@@ -51,7 +51,7 @@ Cli tool takes cl arguments as flags:
 -o or --output: [optional] directs where to put results;
 -m or --max: [optional] max results from a single file;
 --vid: [optional] provided target VID (Vehicle Identifier). Must be one of:
-    vin
+    vin (default)
     lpn-fin
     lpn-fra
     lpn-hun
