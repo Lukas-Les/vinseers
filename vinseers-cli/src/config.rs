@@ -1,7 +1,6 @@
-use vinseers::vid::{self, VidType};
+use vinseers::vid::{VidType, LpnType};
 
 const DEFAULT_MAX_RESULTS: i32 = -1;
-const DEFAULT_RE_PATTERN: &str = "(?i)\\b[A-HJ-NPR-Z0-9]{17}\\b";
 
 #[derive(Debug)]
 pub struct Config {
@@ -38,6 +37,62 @@ impl Config {
             max_results,
             vid_type,
         })
+    }
+}
+
+impl TryFrom<Vec<String>> for Config {
+    type Error = String;
+
+    fn try_from(args: Vec<String>) -> Result<Self, Self::Error> {
+        let mut target_file_path: Option<String> = None;
+        let mut target_dir: Option<String> = None;
+        let mut output_file: Option<String> = None;
+        let mut max_results: Option<u32> = None;
+
+        let mut vid_type: VidType = VidType::Vin;
+
+        let mut i = 1;
+        while i < args.len() - 1 {
+            let flag = args[i].as_str();
+            if !flag.starts_with("-") {
+                i += 1;
+                continue;
+            }
+            let v = Some(args[i + 1].clone());
+            match flag {
+                "-f" | "--file" => target_file_path = v,
+                "-d" | "--dir" => target_dir = v,
+                "-o" | "--output" => output_file = v,
+                "-m" | "--max" => {
+                    max_results = Some(v.unwrap().parse::<u32>().map_err(|e| e.to_string())?)
+                }
+                "--vid" => vid_type = vid_type_from_str(&v.unwrap())?,
+                _ => {
+                    return Err(format!("unknown flag: {}", args[i]));
+                }
+            }
+            i += 2;
+        }
+
+        Config::new(
+            target_file_path,
+            target_dir,
+            output_file,
+            max_results,
+            vid_type,
+        )
+    }
+}
+
+fn vid_type_from_str(s: &str) -> Result<VidType, String> {
+    match s {
+        "vin" => Ok(VidType::Vin),
+        "lpn-fin" => Ok(VidType::Lpn(LpnType::Fin)),
+        "lpn-fra" => Ok(VidType::Lpn(LpnType::Fra)),
+        "lpn-hun" => Ok(VidType::Lpn(LpnType::Hun)),
+        "lpn-ita" => Ok(VidType::Lpn(LpnType::Ita)),
+        "lpn-ltu" => Ok(VidType::Lpn(LpnType::Ltu)),
+        _ => Err(format!("Unknown vid type: {}", s)),
     }
 }
 

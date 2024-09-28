@@ -1,4 +1,4 @@
-mod inputs;
+mod config;
 
 use std::env;
 use std::error::Error;
@@ -9,12 +9,12 @@ use std::process;
 use vinseers::parsers::pdf::parse_pdf;
 use vinseers::{helpers, outputs, search};
 
-use inputs::config::Config;
-use inputs::parse::parse_args;
+use config::Config;
+
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let cfg: Config = parse_args(args).expect("Failed configuration");
+    let cfg: Config = Config::try_from(args).expect("Failed to parse arguments");
     if let Err(e) = run(cfg) {
         eprintln!("Application error: {e}");
         process::exit(1);
