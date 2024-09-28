@@ -50,7 +50,13 @@ Cli tool takes cl arguments as flags:
 -d or --dir: target directory;
 -o or --output: [optional] directs where to put results;
 -m or --max: [optional] max results from a single file;
--r or --re: [optional] provide your regex pattern;
+--vid: [optional] provided target VID (Vehicle Identifier). Must be one of:
+    vin
+    lpn-fin
+    lpn-fra
+    lpn-hun
+    lpn-ita
+    lpn-ltu
 ```
 You must provide either -f or -d, but not both.
 If -o is not provided, the result will be printed in console.
