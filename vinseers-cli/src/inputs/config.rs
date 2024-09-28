@@ -8,6 +8,7 @@ pub struct Config {
     pub output_file: Option<String>,
     pub max_results: i32,
     pub re_pattern: String,
+    // pub vid_type:
 }
 
 impl Config {
