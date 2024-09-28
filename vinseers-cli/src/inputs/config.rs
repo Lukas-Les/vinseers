@@ -9,7 +9,6 @@ pub struct Config {
     pub target_dir: Option<String>,
     pub output_file: Option<String>,
     pub max_results: i32,
-    pub re_pattern: String,
     pub vid_type: VidType,
 }
 
@@ -19,7 +18,6 @@ impl Config {
         target_dir: Option<String>,
         output_file: Option<String>,
         max_results_opt: Option<u32>,
-        re_pattern_opt: Option<String>,
         vid_type: VidType,
     ) -> Result<Self, String> {
         if target_file_path.is_none() && target_dir.is_none() {
@@ -32,17 +30,12 @@ impl Config {
             Some(v) => v as i32,
             None => DEFAULT_MAX_RESULTS,
         };
-        let re_pattern = match re_pattern_opt {
-            Some(v) => v,
-            None => DEFAULT_RE_PATTERN.to_string(),
-        };
 
         Ok(Self {
             target_file_path,
             target_dir,
             output_file,
             max_results,
-            re_pattern,
             vid_type,
         })
     }
@@ -59,7 +52,6 @@ mod tests {
             None,
             Some("output/file".to_string()),
             Some(10),
-            Some("\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string()),
             VidType::Vin,
         )
         .unwrap();
@@ -71,7 +63,6 @@ mod tests {
         assert_eq!(config.target_dir, None);
         assert_eq!(config.output_file, Some("output/file".to_string()));
         assert_eq!(config.max_results, 10);
-        assert_eq!(config.re_pattern, "\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string());
     }
 
     #[test]
@@ -81,7 +72,6 @@ mod tests {
             Some("path/to/target/dir".to_string()),
             Some("output/file".to_string()),
             Some(10),
-            Some("\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string()),
             VidType::Vin,
         )
         .unwrap();
@@ -90,7 +80,6 @@ mod tests {
         assert_eq!(config.target_dir, Some("path/to/target/dir".to_string()));
         assert_eq!(config.output_file, Some("output/file".to_string()));
         assert_eq!(config.max_results, 10);
-        assert_eq!(config.re_pattern, "\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string());
     }
 
     #[test]
@@ -99,7 +88,6 @@ mod tests {
             Some("path/to/target/file".to_string()),
             None,
             Some("output/file".to_string()),
-            None,
             None,
             VidType::Vin,
         )
@@ -112,7 +100,6 @@ mod tests {
         assert_eq!(config.target_dir, None);
         assert_eq!(config.output_file, Some("output/file".to_string()));
         assert_eq!(config.max_results, DEFAULT_MAX_RESULTS);
-        assert_eq!(config.re_pattern, DEFAULT_RE_PATTERN.to_string());
     }
 
     #[test]
@@ -122,7 +109,6 @@ mod tests {
             Some("path/to/target/dir".to_string()),
             Some("output/file".to_string()),
             Some(10),
-            Some("\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string()),
             VidType::Vin,
         );
 
@@ -140,7 +126,6 @@ mod tests {
             None,
             Some("output/file".to_string()),
             Some(10),
-            Some("\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string()),
             VidType::Vin,
         );
 

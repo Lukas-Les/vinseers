@@ -8,7 +8,6 @@ pub fn parse_args(args: Vec<String>) -> Result<Config, String> {
     let mut target_dir: Option<String> = None;
     let mut output_file: Option<String> = None;
     let mut max_results: Option<u32> = None;
-    let mut re_pattern: Option<String> = None;
 
     let mut vid_type: VidType = VidType::Vin;
 
@@ -27,7 +26,6 @@ pub fn parse_args(args: Vec<String>) -> Result<Config, String> {
             "-m" | "--max" => {
                 max_results = Some(v.unwrap().parse::<u32>().map_err(|e| e.to_string())?)
             }
-            "-r" | "--re" => re_pattern = v,
             "--vid" => vid_type = vid_type_from_str(&v.unwrap())?,
             _ => {
                 return Err(format!("unknown flag: {}", args[i]));
@@ -49,7 +47,6 @@ pub fn parse_args(args: Vec<String>) -> Result<Config, String> {
         target_dir,
         output_file,
         max_results,
-        re_pattern,
         vid_type,
     )
 }
@@ -81,15 +78,12 @@ mod tests {
             "output/file".to_string(),
             "-m".to_string(),
             "10".to_string(),
-            "-r".to_string(),
-            "\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string(),
         ];
         let config: Config = parse_args(args).unwrap();
         assert_eq!(config.target_file_path, Some("path/to/file".to_string()));
         assert_eq!(config.target_dir, None);
         assert_eq!(config.output_file, Some("output/file".to_string()));
         assert_eq!(config.max_results, 10);
-        assert_eq!(config.re_pattern, "\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string());
     }
 
     #[test]
@@ -102,15 +96,12 @@ mod tests {
             "output/file".to_string(),
             "-m".to_string(),
             "10".to_string(),
-            "-r".to_string(),
-            "\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string(),
         ];
         let config = parse_args(args).unwrap();
         assert_eq!(config.target_file_path, None);
         assert_eq!(config.target_dir, Some("path/to/dir".to_string()));
         assert_eq!(config.output_file, Some("output/file".to_string()));
         assert_eq!(config.max_results, 10);
-        assert_eq!(config.re_pattern, "\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string());
     }
 
     #[test]
