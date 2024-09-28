@@ -1,8 +1,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use crate::{parsers, search, outputs};
-
+use crate::{outputs, parsers, search};
 
 pub fn walk_directory(path: &Path) -> Vec<PathBuf> {
     let mut file_names: Vec<PathBuf> = Vec::new();
@@ -52,10 +51,7 @@ pub fn process_paths(paths: &Vec<PathBuf>, re_pattern: &str) -> Vec<String> {
         }
         match buffer {
             Some(v) => {
-                let result = outputs::format(
-                    &path,
-                    search::search(&v, &re_pattern.to_string()),
-                );
+                let result = outputs::format(&path, search::search(&v, &re_pattern.to_string()));
                 results.push(result);
             }
             None => {
@@ -65,7 +61,6 @@ pub fn process_paths(paths: &Vec<PathBuf>, re_pattern: &str) -> Vec<String> {
     }
     results
 }
-
 
 #[cfg(test)]
 mod tests {

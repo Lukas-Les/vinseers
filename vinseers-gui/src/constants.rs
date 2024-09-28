@@ -23,7 +23,7 @@ pub const ALLOWED_FILES: [&str; 26] = [
     "ts",    // TypeScript files
     "txt",   // Plain text
     "xml",   // XML files
-    "yml",    // YAML files
+    "yml",   // YAML files
     "yaml",
 ];
 
