@@ -42,7 +42,7 @@ fn run(cfg: Config) -> Result<(), Box<dyn Error>> {
                 }
             };
         }
-        let matches = search::search(&content, &cfg.re_pattern);
+        let matches = search::search(&content, &cfg.vid_type.to_regex());
         if !matches.is_empty() {
             let result_line = outputs::format(&target_file, matches);
             result.push(result_line);

@@ -1,3 +1,5 @@
+use vinseers::vid::{self, VidType};
+
 const DEFAULT_MAX_RESULTS: i32 = -1;
 const DEFAULT_RE_PATTERN: &str = "(?i)\\b[A-HJ-NPR-Z0-9]{17}\\b";
 
@@ -8,7 +10,7 @@ pub struct Config {
     pub output_file: Option<String>,
     pub max_results: i32,
     pub re_pattern: String,
-    // pub vid_type:
+    pub vid_type: VidType,
 }
 
 impl Config {
@@ -18,6 +20,7 @@ impl Config {
         output_file: Option<String>,
         max_results_opt: Option<u32>,
         re_pattern_opt: Option<String>,
+        vid_type: VidType,
     ) -> Result<Self, String> {
         if target_file_path.is_none() && target_dir.is_none() {
             return Err("Provide target file or directory!".to_string());
@@ -40,6 +43,7 @@ impl Config {
             output_file,
             max_results,
             re_pattern,
+            vid_type,
         })
     }
 }
@@ -56,6 +60,7 @@ mod tests {
             Some("output/file".to_string()),
             Some(10),
             Some("\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string()),
+            VidType::Vin,
         )
         .unwrap();
 
@@ -77,6 +82,7 @@ mod tests {
             Some("output/file".to_string()),
             Some(10),
             Some("\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string()),
+            VidType::Vin,
         )
         .unwrap();
 
@@ -95,6 +101,7 @@ mod tests {
             Some("output/file".to_string()),
             None,
             None,
+            VidType::Vin,
         )
         .unwrap();
 
@@ -116,6 +123,7 @@ mod tests {
             Some("output/file".to_string()),
             Some(10),
             Some("\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string()),
+            VidType::Vin,
         );
 
         assert!(config.is_err());
@@ -133,6 +141,7 @@ mod tests {
             Some("output/file".to_string()),
             Some(10),
             Some("\\b[A-HJ-NPR-Z0-9]{17}\\b".to_string()),
+            VidType::Vin,
         );
 
         assert!(config.is_err());

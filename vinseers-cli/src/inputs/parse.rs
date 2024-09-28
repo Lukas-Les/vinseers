@@ -1,4 +1,7 @@
+use vinseers::vid::{self, LpnType, VidType};
+
 use crate::inputs::config::Config;
+
 
 pub fn parse_args(args: Vec<String>) -> Result<Config, String> {
     let mut target_file_path: Option<String> = None;
@@ -6,6 +9,8 @@ pub fn parse_args(args: Vec<String>) -> Result<Config, String> {
     let mut output_file: Option<String> = None;
     let mut max_results: Option<u32> = None;
     let mut re_pattern: Option<String> = None;
+
+    let mut vid_type: VidType = VidType::Vin;
 
     let mut i = 1;
     while i < args.len() - 1 {
@@ -23,6 +28,7 @@ pub fn parse_args(args: Vec<String>) -> Result<Config, String> {
                 max_results = Some(v.unwrap().parse::<u32>().map_err(|e| e.to_string())?)
             }
             "-r" | "--re" => re_pattern = v,
+            "--vid" => vid_type = vid_type_from_str(&v.unwrap())?,
             _ => {
                 return Err(format!("unknown flag: {}", args[i]));
             }
@@ -44,7 +50,20 @@ pub fn parse_args(args: Vec<String>) -> Result<Config, String> {
         output_file,
         max_results,
         re_pattern,
+        vid_type,
     )
+}
+
+fn vid_type_from_str(s: &str) -> Result<VidType, String> {
+    match s {
+        "vin" => Ok(VidType::Vin),
+        "lpn-fin" => Ok(VidType::Lpn(LpnType::Fin)),
+        "lpn-fra" => Ok(VidType::Lpn(LpnType::Fra)),
+        "lpn-hun" => Ok(VidType::Lpn(LpnType::Hun)),
+        "lpn-ita" => Ok(VidType::Lpn(LpnType::Ita)),
+        "lpn-ltu" => Ok(VidType::Lpn(LpnType::Ltu)),
+        _ => Err(format!("Unknown vid type: {}", s)),
+    }
 }
 
 #[cfg(test)]
