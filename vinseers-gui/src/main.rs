@@ -8,7 +8,7 @@ use iced::widget::text_editor::Content;
 use iced::widget::{column, horizontal_space, row, text_editor, Button, PickList};
 use iced::{Element, Theme};
 
-use vinseers::{helpers, regexes, vid::VidType, vid::LpnType};
+use vinseers::{helpers, regexes, vid::LpnType, vid::VidType};
 
 pub fn main() -> iced::Result {
     iced::application("vinseers", update, view)

@@ -11,7 +11,6 @@ use vinseers::{helpers, outputs, search};
 
 use config::Config;
 
-
 fn main() {
     let args: Vec<String> = env::args().collect();
     let cfg: Config = Config::try_from(args).expect("Failed to parse arguments");

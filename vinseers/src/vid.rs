@@ -1,6 +1,5 @@
 use crate::regexes;
 
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum LpnType {
     Fin,
@@ -24,7 +23,7 @@ impl VidType {
         Self::Lpn(LpnType::Hun),
         Self::Lpn(LpnType::Ita),
         Self::Lpn(LpnType::Ltu),
-        ];
+    ];
 
     pub fn to_regex(&self) -> String {
         match self {

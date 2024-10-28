@@ -1,4 +1,4 @@
-use vinseers::vid::{VidType, LpnType};
+use vinseers::vid::{LpnType, VidType};
 
 const DEFAULT_MAX_RESULTS: i32 = -1;
 
